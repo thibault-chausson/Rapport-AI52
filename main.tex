@@ -1,0 +1,155 @@
+\documentclass{librairies/lib}
+
+%%%%%%%%%%%%%VARIABLE EN TETE%%%%%%%%%%%
+\newcommand{\TITRE}{\today}
+\newcommand{\NOM}{Optimisation combinatoire}
+\newcommand{\UVXX}{AI52}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\makeglossaries
+
+
+\newglossaryentry{UTBM}
+{
+    name=UTBM,
+    description={University of Technologie of Belfort-Montbéliard}
+}
+
+
+
+\begin{document}
+    % This happens when LaTeX can't find a way to fit the text in without breaking its fussy typography rulles. You can relax those rules. Try putting \emergencystretch 3em
+    \emergencystretch 3em
+
+    \include{pages/titlepage}
+
+
+%\maketitle
+    \newpage
+    \pagestyle{no_number}
+    \section*{Résumé}
+    \addcontentsline{toc}{section}{Résumé}
+
+
+    RÉSUMER
+    \begin{description}
+        \item[Mots clées] ...........
+    \end{description}
+
+    \newpage
+
+
+
+    \tableofcontents
+    \newpage
+
+
+
+    \pagestyle{number}
+
+
+    \section{Présentation}\label{sec:presentation}
+
+    \input{pages/presentation}
+
+
+    \newpage
+
+
+
+    \section{Définition du problème}\label{sec:definition-du-probleme}
+
+    \input{pages/definition-pb}
+
+
+    \newpage
+
+    \section{Algorithme Génétique}\label{sec:algorithme-genetique}
+
+    \input{pages/genetique}
+
+
+    \newpage
+
+
+    \section{Colonies de fournies}\label{sec:colonies-de-fournies}
+
+    \input{pages/fourmies}
+
+
+    \newpage
+
+    \section{Essaim particulaire}\label{sec:essaim-particulaire}
+
+    \input{pages/essaim}
+
+
+    \newpage
+
+    \section{Recuit simulé}\label{sec:recuit-simule}
+
+    \input{pages/recuit}
+
+
+    \newpage
+
+    \section{Recherche tabou}\label{sec:recherche-tabou}
+
+    \input{pages/tabou}
+
+
+    \newpage
+
+
+
+    \section{Conclusion}\label{sec:conclusion}
+
+    \input{pages/conclusion}
+
+    \newpage
+
+
+    \pagenumbering{roman}
+
+
+    \section*{Annexes}
+    \addcontentsline{toc}{section}{Annexes}
+
+
+%Formats de fichiers
+
+%Captures
+
+
+    \printglossaries
+    \addcontentsline{toc}{section}{Glossary}
+
+
+    \newpage
+
+    \listoffigures
+    \addcontentsline{toc}{section}{List of Figures}
+
+
+    %\newpage
+
+    %\listoftables
+    %\addcontentsline{toc}{section}{Table des tableaux}
+
+    \newpage
+
+    %\lstlistoflistings
+    %\addcontentsline{toc}{section}{List of Sources Codes}
+
+    %\newpage
+
+    %\nocite{*} %Pour tout cité, même si non appelé
+    \bibliography{refs}
+    \bibliographystyle{plain}
+    \addcontentsline{toc}{section}{References}
+
+
+\end{document}

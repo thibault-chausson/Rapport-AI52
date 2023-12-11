@@ -1,0 +1,60 @@
+\newpage
+\subsection{UML diagram}\label{subsec:uml-diagram}
+
+%%%%%%%% Documentation : %%%%%%%%%
+% https://perso.ensta-paris.fr/~kielbasi/tikzuml/var/files/doc/tikzumlmanual.pdf
+
+
+Here is a representation in the form of a UML diagram of all the data that we will use to generate a schedule.
+
+\begin{center}
+    \begin{figure}[!h]
+        \begin{tikzpicture}
+            \begin{umlpackage}{Data modeling}
+                \umlclass[x=-3, y=-5]{Classroom}{
+                    Id: UID \\
+                    Number: string \\
+                    Type: [CM, TP] \\
+                    Seat: Int \\
+                    Equipment: [Chemistry, Physics, \ldots]
+                }{
+                }
+                \umlclass[x=1, y=0]{Session}{
+                    Id : UID \\
+                    Type: [CM, TD, TP] \\
+                    Duration : Float\\
+                    StartTime : DateTime
+                }{
+                }
+                \umlclass[x=3, y=-5]{UV}{
+                    Id: UID \\
+                    Name: String \\
+                    Pole: String \\
+                }{
+                }
+                \umlclass[x=-5, y=0]{Teacher}{
+                    Id: UID \\
+                    Name: String \\
+                    DayOff: String \\
+                    Pole: String
+                }{
+                }
+                \umlclass[x=3, y=-10]{Student}{
+                    Id: UID \\
+                    Name: String \\
+                    UV : Array of UV \\
+                    Pole: String \\
+                    Level: String
+                }{
+                }
+            \end{umlpackage}
+            \umlassoc[geometry=--, arg1=, mult1=1, pos1=0.2,  arg2=, mult2=1..n, pos2=0.7]{Session}{Teacher}
+            \umlassoc[geometry=|-|, arg1=, mult1=1, pos1=0.3,  arg2=, mult2=1..n, pos2=2]{Session}{Classroom}
+            \umluniaggreg[geometry=|-, arg1=, mult1=1..n, pos1=0.15,  arg2=, mult2=1, pos2=0.4]{UV}{Session}
+            \umlassoc[geometry=|-|, arg1=-enrolled List, mult1=0..n, pos1=0.4,  arg2=-UVs List, mult2=0..n, pos2=2.2]{UV}{Student}
+        \end{tikzpicture}
+        \caption{UML data} \label{fig:UML-data}
+    \end{figure}
+\end{center}
+
+\newpage
