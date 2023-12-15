@@ -240,6 +240,10 @@ literate=
 
 \RequirePackage{colortbl}
 
+% Diagonale cellule
+\RequirePackage{diagbox}
+
+
 %Tableur sur plusieurs pages
 \RequirePackage{array,multirow,makecell}
 \newcolumntype{M}[1]{>{\smallskip}m{#1}}
@@ -267,7 +271,7 @@ literate=
 %Équations
 
 \RequirePackage{amsmath}
-\usepackage{stmaryrd}
+\RequirePackage{stmaryrd}
 
 %euro
 
