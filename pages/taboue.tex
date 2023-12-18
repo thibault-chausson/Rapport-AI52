@@ -13,35 +13,13 @@ Supposons que solution initiale $S_0$ soit
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2 & 3 & 4 & 5  & 6 & 7 & 8 & 9  & 10 & Fitness \\
+        \diagbox{Solution}{Cours} & 1  & 2 & 3 & 4 & 5  & 6 & 7 & 8 & 9  & 10 & Fitness \\
         \hline
         $S_0$                    & Ma & L & L & V & Me & J & J & V & Me & Ma & 6       \\
         \hline
     \end{tabular}
     \caption{$S_0$ recherche taboue}\label{tab:s-0-taboue}
 \end{table}
-
-La liste taboue est la suivante :
-
-\begin{table}[!h]
-    \centering
-    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
-        \hline
-        \diagbox{Parents}{Cours} & 1  & 2  & 3  & 4  & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
-        \hline
-        $S_0$                    & Ma & L  & L  & V  & Me & J  & J  & V  & Me & Ma & 6       \\
-        \hline
-        \_                       & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_      \\
-        \hline
-        \_                       & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_      \\
-        \hline
-    \end{tabular}
-    \caption{$T_0$ liste taboue}\label{tab:t-0-taboue}
-\end{table}
-
-Pour voir des cours bien équilibrés, nous décidons de répartir aléatoirement 2 cours par jour.
-
-Nous reprenons la liste des v\oe ux des étudiants du tableau : \ref{tab:voeux-etudiant}.
 
 Ainsi, nous avons :
 
@@ -57,6 +35,11 @@ Ainsi, nous avons :
     \caption{$S_0$ initiale (jours)}\label{tab:s-0-taboue-jour}
 \end{table}
 
+Pour voir des cours bien équilibrés, nous décidons de répartir aléatoirement 2 cours par jour.
+
+Nous reprenons la liste des v\oe ux des étudiants du tableau : \ref{tab:voeux-etudiant}.
+
+
 $S_0$ a les conflits suivants :
 \begin{enumerate}
     \item 2 cours en même temps donc $p_1 = 1$
@@ -67,15 +50,39 @@ $S_0$ a les conflits suivants :
 \end{enumerate}
 Donc, la fitness est de $6$.
 
-\subsection{Exécutions}\label{subsec:executions}
+\newpage
 
-\subsubsection{Intération 1}
+La liste taboue est la suivante :
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2  & 3 & 4  & 5  & 6  & 7 & 8  & 9  & 10 & Fitness \\
+        \diagbox{Solutions}{Cours} & 1  & 2  & 3  & 4  & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
+        \hline
+        $S_0$                    & Ma & L  & L  & V  & Me & J  & J  & V  & Me & Ma & 6       \\
+        \hline
+        \_                       & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_      \\
+        \hline
+        \_                       & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_ & \_      \\
+        \hline
+    \end{tabular}
+    \caption{$T_0$ liste taboue}\label{tab:t-0-taboue}
+\end{table}
+
+\subsection{Exécution}\label{subsec:executions}
+
+L'ensemble des exécutions ont été réalisées par un programme Python.
+
+\subsubsection{Itération 1}
+
+En utilisant l'échange de deux voisins pour avoir un voisinage, nous avons :
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        \diagbox{Voisins}{Cours} & 1  & 2  & 3 & 4  & 5  & 6  & 7 & 8  & 9  & 10 & Fitness \\
         \hline
         $V_{1.1}$                & L  & Ma & L & V  & Me & J  & J & V  & Me & Ma & 6       \\
         \hline
@@ -100,13 +107,15 @@ Donc, la fitness est de $6$.
 \end{table}
 
 
-Solution retenue
+La solution retenue est celle avec la plus grande fitness, si deux fitness maximales sont égales, alors nous prenons aléatoirement parmi l'ensemble de maximum, ici $V_{1.7}$.
+
+\newpage
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2 & 3 & 4 & 5  & 6 & 7 & 8 & 9  & 10 & Fitness \\
+        \diagbox{Solution}{Cours} & 1  & 2 & 3 & 4 & 5  & 6 & 7 & 8 & 9  & 10 & Fitness \\
         \hline
         $S_1$                    & Ma & L & L & V & Me & J & V & J & Me & Ma & 7       \\
         \hline
@@ -115,13 +124,13 @@ Solution retenue
 \end{table}
 
 
-La liste taboue est la suivante :
+Nous ajoutons la solution $S_1$ à la liste taboue :
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2  & 3  & 4  & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
+        \diagbox{Solutions}{Cours} & 1  & 2  & 3  & 4  & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
         \hline
         $S_1$                    & Ma & L  & L  & V  & Me & J  & V  & J  & Me & Ma & 7       \\
         \hline
@@ -133,13 +142,15 @@ La liste taboue est la suivante :
     \caption{$T_1$ liste taboue}\label{tab:t-1-taboue}
 \end{table}
 
-\subsubsection{Intération 2}
+\subsubsection{Itération 2}
+
+Calculons le voisinage de $S_1$ :
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2  & 3 & 4  & 5  & 6  & 7 & 8  & 9  & 10 & Fitness \\
+        \diagbox{Voisins}{Cours} & 1  & 2  & 3 & 4  & 5  & 6  & 7 & 8  & 9  & 10 & Fitness \\
         \hline
         $V_{2.1}$                & L  & Ma & L & V  & Me & J  & V & J  & Me & Ma & 7       \\
         \hline
@@ -163,13 +174,15 @@ La liste taboue est la suivante :
     \caption{Le voisinage de l'itération 2}\label{tab:voisinage-2}
 \end{table}
 
-Solution retenue
+La solution retenue est $V_{2.5}$ :
+
+\newpage
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2 & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
+        \diagbox{Solution}{Cours} & 1  & 2 & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
         \hline
         $S_2$                    & Ma & L & L & V & J & Me & V & J & Me & Ma & 8       \\
         \hline
@@ -184,7 +197,7 @@ La liste taboue est la suivante :
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2 & 3 & 4 & 5  & 6  & 7 & 8 & 9  & 10 & Fitness \\
+        \diagbox{Solutions}{Cours} & 1  & 2 & 3 & 4 & 5  & 6  & 7 & 8 & 9  & 10 & Fitness \\
         \hline
         $S_2$                    & Ma & L & L & V & J  & Me & V & J & Me & Ma & 8       \\
         \hline
@@ -196,13 +209,15 @@ La liste taboue est la suivante :
     \caption{$T_2$ liste taboue}\label{tab:t-2-taboue}
 \end{table}
 
-\subsubsection{Intération 3}
+\subsubsection{Itération 3}
+
+Calculons le voisinage de $S_2$.
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2  & 3 & 4 & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
+        \diagbox{Voisins}{Cours} & 1  & 2  & 3 & 4 & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
         \hline
         $V_{3.1}$                & L  & Ma & L & V & J  & Me & V  & J  & Me & Ma & 8       \\
         \hline
@@ -226,13 +241,15 @@ La liste taboue est la suivante :
     \caption{Le voisinage de l'itération 3}\label{tab:voisinage-3}
 \end{table}
 
-Solution retenue
+La solution retenue est $V_{3.3}$ :
+
+\newpage
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2 & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
+        \diagbox{Solution}{Cours} & 1  & 2 & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
         \hline
         $S_3$                    & Ma & L & V & L & J & Me & V & J & Me & Ma & 9       \\
         \hline
@@ -241,13 +258,13 @@ Solution retenue
 \end{table}
 
 
-La liste taboue est la suivante :
+La liste taboue est la suivante (comme nous sommes en FIFO, $S_0$ part) :
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2 & 3 & 4 & 5  & 6  & 7 & 8 & 9  & 10 & Fitness \\
+        \diagbox{Solutions}{Cours} & 1  & 2 & 3 & 4 & 5  & 6  & 7 & 8 & 9  & 10 & Fitness \\
         \hline
         $S_3$                    & Ma & L & V & L & J  & Me & V & J & Me & Ma & 9       \\
         \hline
@@ -259,13 +276,15 @@ La liste taboue est la suivante :
     \caption{$T_3$ liste taboue}\label{tab:t-3-taboue}
 \end{table}
 
-\subsubsection{Intération 4}
+\subsubsection{Itération 4}
+
+Calculons le voisinage de $S_3$ :
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2  & 3 & 4 & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
+        \diagbox{Voisins}{Cours} & 1  & 2  & 3 & 4 & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
         \hline
         $V_{4.1}$                & L  & Ma & V & L & J  & Me & V  & J  & Me & Ma & 9       \\
         \hline
@@ -289,13 +308,15 @@ La liste taboue est la suivante :
     \caption{Le voisinage de l'itération 4}\label{tab:voisinage-4}
 \end{table}
 
-Solution retenue
+La solution retenue est $V_{4.9}$ :
+
+\newpage
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2 & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
+        \diagbox{Solution}{Cours} & 1  & 2 & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
         \hline
         $S_4$                    & Ma & L & V & L & J & Me & V & J & Ma & Me & 9       \\
         \hline
@@ -304,13 +325,13 @@ Solution retenue
 \end{table}
 
 
-La liste taboue est la suivante :
+La liste taboue est la suivante ($S_1$ part $S_4$ rentre) :
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2 & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
+        \diagbox{Solutions}{Cours} & 1  & 2 & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
         \hline
         $S_4$                    & Ma & L & V & L & J & Me & V & J & Ma & Me & 9       \\
         \hline
@@ -322,14 +343,15 @@ La liste taboue est la suivante :
     \caption{$T_4$ liste taboue}\label{tab:t-4-taboue}
 \end{table}
 
-\subsubsection{Intération 5}
+\subsubsection{Itération 5}
 
+Calculons le voisinage de $S_4$ :
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2  & 3 & 4 & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
+        \diagbox{Voisins}{Cours} & 1  & 2  & 3 & 4 & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
         \hline
         $V_{5.1}$                & L  & Ma & V & L & J  & Me & V  & J  & Ma & Me & 10      \\
         \hline
@@ -354,13 +376,15 @@ La liste taboue est la suivante :
 \end{table}
 
 
-Solution retenue
+La solution retenue est $V_{5.1}$ :
+
+\newpage
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1 & 2  & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
+        \diagbox{Solution}{Cours} & 1 & 2  & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
         \hline
         $S_5$                    & L & Ma & V & L & J & Me & V & J & Ma & Me & 10      \\
         \hline
@@ -368,13 +392,13 @@ Solution retenue
     \caption{Solution $S_5$}\label{tab:s-5}
 \end{table}
 
-La liste taboue est la suivante :
+La liste taboue est la suivante ($S_2$ part $S_5$ rentre) :
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1  & 2  & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
+        \diagbox{Solutions}{Cours} & 1  & 2  & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
         \hline
         $S_5$                    & L  & Ma & V & L & J & Me & V & J & Ma & Me & 10      \\
         \hline
@@ -388,13 +412,15 @@ La liste taboue est la suivante :
 
 \subsubsection{Bilan}
 
-En 5 itération
+En 5 itérations, nous arrivons à la valeur maximale de la fitness.
+
+Voici le planning satisfaisant toutes les classes :
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
         \hline
-        \diagbox{Parents}{Cours} & 1 & 2  & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
+        \diagbox{Solution}{Cours} & 1 & 2  & 3 & 4 & 5 & 6  & 7 & 8 & 9  & 10 & Fitness \\
         \hline
         $S_5$                    & L & Ma & V & L & J & Me & V & J & Ma & Me & 10      \\
         \hline
@@ -402,6 +428,9 @@ En 5 itération
     \caption{Solution $S_5$ finale}\label{tab:s-5-final}
 \end{table}
 
+Nous pouvons visualiser l'évolution de la fitness, en quelques itérations, nous arrivons sur une très bonne solution.
+
+\newpage
 
 \begin{figure}[!h]
     \begin{center}
