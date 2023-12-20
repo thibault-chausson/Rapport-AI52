@@ -1,3 +1,54 @@
 %! Author = thibaultchausson
 %! Date = 11/12/2023
 
+Pour appliquer la méthode du recuit simulé, il nous faut tout d'abord en définir les paramètres.
+
+Tout d'abord, la solution initiale est obtenue en générant aléatoirement une répartition des cours, dans les limites des contraintes fortes :
+
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        \diagbox{Solution}{Cours} & 1  & 2 & 3 & 4 & 5  & 6 & 7 & 8 & 9  & 10  \\
+        \hline
+        $S_0$                    	   & J & Me & Ma & V & V & J  & L & V & V & Me        \\
+        \hline
+    \end{tabular}
+    \caption{$S_0$ recuit simulé}\label{tab:s-0-recuit}
+\end{table}
+
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Jours & L    & Ma    & Me   & J    & V    \\
+        \hline
+        $S_0$ & 7 & 3 & 2, 10 & 1,6 & 4, 5, 8, 9 \\
+        \hline
+    \end{tabular}
+    \caption{$S_0$ initiale (jours)}\label{tab:s-0-recuit-jour}
+\end{table}
+
+Nous pouvons maintenant étudier la fitness de cette solution :
+
+\begin{itemize}
+	\item Classe 1 : 1 conflit, fitness égale à 1
+	\item Classe 2 : 2 conflits, fitness égale à 0
+	\item Classe 3 : 1 conflit, fitness égale à 1
+	\item Classe 4 : 1 conflit, fitness égale à 1
+	\item Classe 5 : 1 conflit, fitness égale à 1
+\end{itemize}
+
+Pour des raisons pratiques, on limitera le recuit simulé à 5 itérations par palier, à un facteur de refroidissement $\lambda = 0.5$, à une température initiale $T_0 = 2$, et à un seuil de $0.3$, afin de n'effectuer 15 opérations.
+
+On définit une solution voisine comme toute solution respectant les contraintes fortes obtenue en déplaçant un cours à un jour adjacent.
+
+On choisit la transformation à effectuer en choisissant un entier $x$ non nul dans l'intervalle $[-10;10]$
+
+Un nombre négatif correspond à un déplacement du cours numéroté $|x|$ au jour précédent (on considère que le jour précédant le lundi est le vendredi), et inversement pour un nombre positif.
+
+
+
+
