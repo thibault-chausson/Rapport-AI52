@@ -1,3 +1,446 @@
 %! Author = thibaultchausson
 %! Date = 11/12/2023
 
+Pour réaliser cette métaheurisitique, nous devons fixer :
+\begin{itemize}
+    \item La population initiale de 6 individus
+    \item Le taux de mutation et la méthode de mutation
+    \item La méthode de croisement
+\end{itemize}
+
+Comme vu plus haut la valeur maximale de la fitness est de $10$.
+
+Nous avons 10 UVs réparties sur 5 jours, chaque UV peut être placée sur 5 jours donc l'espace de solution est de dimension $nb\_jours^{nb\_UVs} = 5^{10} = 9765625$.
+
+\subsection{V\oe ux des étudiants}\label{subsec:voeux-des-etudiants}
+
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Classes & 1       & 2       & 3       & 4       & 5        \\
+        \hline
+        UVs     & 1, 2, 3 & 4, 5, 9 & 3, 4, 8 & 2, 4, 5 & 2, 3, 10 \\
+        \hline
+    \end{tabular}
+    \caption{Voeux des étudiants}\label{tab:voeux-etudiant}
+\end{table}
+
+\subsection{Population initiale}\label{subsec:population-initiale}
+
+Tirons de manière aléatoire la répartition des UVs par jours :
+
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        \diagbox{Parents}{Cours} & 1  & 2  & 3  & 4  & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
+        \hline
+        1                        & Ma & L  & L  & V  & Me & J  & J  & V  & Me & L  & 5       \\
+        \hline
+        2                        & V  & L  & V  & Ma & Me & V  & L  & V  & Ma & Me & 7       \\
+        \hline
+        3                        & J  & L  & Ma & Ma & V  & Me & Ma & Me & L  & Ma & 8       \\
+        \hline
+        4                        & Me & Ma & L  & J  & V  & J  & L  & V  & J  & V  & 9       \\
+        \hline
+        5                        & Ma & Me & Me & Me & V  & Ma & L  & Ma & V  & Ma & 5       \\
+        \hline
+        6                        & Me & L  & J  & J  & L  & L  & J  & J  & Ma & L  & 6       \\
+        \hline
+    \end{tabular}
+    \caption{Population initiale (chromosomes)}\label{tab:pop-ini-chr}
+\end{table}
+
+\newpage
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Jours     & L           & Ma          & Me      & J          & V          \\
+        \hline
+        Parents 1 & 2, 3, 10    & 1           & 5, 9    & 6, 7       & 4, 8       \\
+        \hline
+        Parents 2 & 2, 7        & 4, 9        & 5, 10   & \_         & 1, 3, 6, 8 \\
+        \hline
+        Parents 3 & 2, 9        & 3, 4, 7, 10 & 6, 8    & 1          & 5          \\
+        \hline
+        Parents 4 & 3, 7        & 2           & 1       & 4, 6, 9    & 5, 8, 10   \\
+        \hline
+        Parents 5 & 7           & 1, 6, 8, 10 & 2, 3, 4 & \_         & 5, 9       \\
+        \hline
+        Parents 6 & 2, 5, 6, 10 & 9           & 1       & 3, 4, 7, 8 & \_         \\
+        \hline
+    \end{tabular}
+    \caption{Population initiale (jours)}\label{tab:pop-ini-jours}
+\end{table}
+
+
+Le parent 1 a les conflit suivant :
+\begin{enumerate}
+    \item 2 cours en même temps donc $p_1 = 1$
+    \item 2 cours en même temps donc $p_2 = 1$
+    \item 2 cours en même temps donc $p_3 = 1$
+    \item 0 cours en même temps donc $p_4 = 2$
+    \item 3 cours en même temps donc $p_5 = 0$
+\end{enumerate}
+Donc, la fitness est de $5$.
+
+Le parent 2 a les conflit suivant :
+\begin{enumerate}
+    \item 2 cours en même temps donc $p_1 = 1$
+    \item 2 cours en même temps donc $p_2 = 1$
+    \item 2 cours en même temps donc $p_3 = 1$
+    \item 0 cours en même temps donc $p_4 = 2$
+    \item 0 cours en même temps donc $p_5 = 2$
+\end{enumerate}
+Donc, la fitness est de $7$.
+
+Le parent 3 a les conflit suivant :
+\begin{enumerate}
+    \item 0 cours en même temps donc $p_1 = 2$
+    \item 0 cours en même temps donc $p_2 = 2$
+    \item 2 cours en même temps donc $p_3 = 1$
+    \item 0 cours en même temps donc $p_4 = 2$
+    \item 2 cours en même temps donc $p_5 = 1$
+\end{enumerate}
+Donc, la fitness est de $8$.
+
+Le parent 4 a les conflit suivant :
+\begin{enumerate}
+    \item 0 cours en même temps donc $p_1 = 2$
+    \item 2 cours en même temps donc $p_2 = 2$
+    \item 0 cours en même temps donc $p_3 = 3$
+    \item 0 cours en même temps donc $p_4 = 2$
+    \item 0 cours en même temps donc $p_5 = 3$
+\end{enumerate}
+Donc, la fitness est de $9$.
+
+Le parent 5 a les conflit suivant :
+\begin{enumerate}
+    \item 2 cours en même temps donc $p_1 = 1$
+    \item 2 cours en même temps donc $p_2 = 1$
+    \item 2 cours en même temps donc $p_3 = 1$
+    \item 2 cours en même temps donc $p_4 = 1$
+    \item 2 cours en même temps donc $p_5 = 1$
+\end{enumerate}
+Donc, la fitness est de $5$.
+
+Le parent 6 a les conflit suivant :
+\begin{enumerate}
+    \item 0 cours en même temps donc $p_1 = 2$
+    \item 0 cours en même temps donc $p_2 = 2$
+    \item 3 cours en même temps donc $p_3 = 0$
+    \item 2 cours en même temps donc $p_4 = 1$
+    \item 2 cours en même temps donc $p_5 = 1$
+\end{enumerate}
+Donc, la fitness est de $6$.
+
+\subsection{Méthode de sélection}\label{subsec:methode-de-selection}
+
+Pour la sélection, nous ferons le choix d'une sélection par la méthode de la roulette.
+
+\subsection{Méthode de croisement}\label{subsec:methode-de-croisement}
+
+Nous utiliserons un croisement un point en point central.
+
+\subsection{Méthode de mutation}\label{subsec:methode-de-mutation}
+
+Nous changerons le jour d'un cours par un autre aléatoire.
+Notons $\mu = 0.2$ le taux de mutation.
+
+\subsection{Exécution}\label{subsec:execution}
+
+\subsubsection{Itération 1}
+
+\textbf{\underline{Sélection}}
+
+Calculons la somme des fitness :
+\begin{equation}
+    \sum_{i=1}^6 fitness_i = 5 + 7 + 8 + 9 +5 + 6 = 40
+\end{equation}
+
+
+\begin{figure}[!h]
+    \centering
+    \begin{tikzpicture}
+        \pie{22.5/Parent 4, 20/Parent 3, 17.5/Parent 2, 15/Parent 6, 12.5/Parent 1, 12.5/Parent 5}
+    \end{tikzpicture}
+    \caption{Roulette 1}\label{fig:roulette-1}
+\end{figure}
+
+
+Tirons deux nombres entre 0 et 100\% pour choisir les parents :
+\begin{itemize}
+    \item 91 $\rightarrow$ Parent 5
+    \item 76 $\rightarrow$ Parent 1
+\end{itemize}
+
+\textbf{\underline{Croisement}}
+
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        \diagbox{Parents}{Cours} & 1                    & 2                    & 3                    & 4                    & 5                   & 6                    & 7                   & 8                    & 9                   & 10                   & Fitness \\
+        \hline
+        1                        & \cellcolor{myred}Ma  & \cellcolor{myred}L   & \cellcolor{myred}L   & \cellcolor{myred}V   & \cellcolor{myred}Me & \cellcolor{myred}J  & \cellcolor{myred}J & \cellcolor{myred}V  & \cellcolor{myred}Me & \cellcolor{myred}L  & 5       \\
+        \hline
+        5                        & \cellcolor{myblue}Ma & \cellcolor{myblue}Me & \cellcolor{myblue}Me & \cellcolor{myblue}Me & \cellcolor{myblue}V  & \cellcolor{myblue}Ma & \cellcolor{myblue}L & \cellcolor{myblue}Ma & \cellcolor{myblue}V  & \cellcolor{myblue}Ma & 5       \\
+        \hline
+        Fils 1                   & \cellcolor{myred}Ma  & \cellcolor{myred}L   & \cellcolor{myred}L   & \cellcolor{myred}V  & \cellcolor{myred}Me & \cellcolor{myblue}Ma & \cellcolor{myblue}L & \cellcolor{myblue}Ma & \cellcolor{myblue}V  & \cellcolor{myblue}Ma & 7       \\
+        \hline
+    \end{tabular}
+    \caption{Croisement 1 (chromosomes)}\label{tab:croiseent-1-chr}
+\end{table}
+
+\newpage
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Jours  & L       & Ma          & Me & J  & V    \\
+        \hline
+        Fils 1 & 2, 3, 7 & 1, 6, 8, 10 & 5  & \_ & 4, 9 \\
+        \hline
+    \end{tabular}
+    \caption{Croisement 1 (jours)}\label{tab:croisement-1-jours}
+\end{table}
+
+Le fils 1 a les conflits suivants :
+\begin{enumerate}
+    \item 2 cours en même temps donc $p_1 = 1$
+    \item 2 cours en même temps donc $p_2 = 1$
+    \item 0 cours en même temps donc $p_3 = 2$
+    \item 0 cours en même temps donc $p_4 = 2$
+    \item 2 cours en même temps donc $p_5 = 1$
+\end{enumerate}
+Donc, la fitness est de $7$.
+
+\textbf{\underline{Mutation}}
+
+Tirons un nombre aléatoire pour savoir si nous devons réaliser une mutation $ 0.3 > \mu = 0.2$, donc pas besoin de faire de mutation.
+
+\textbf{\underline{Évaluation}}
+
+Donc nous pouvons supprimer le parent 5 qui a une fitness de 5 alors que le fils 1 a une fitness de 7.
+
+Voici la population :
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        \diagbox{Parents}{Cours} & 1  & 2  & 3  & 4  & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
+        \hline
+        1                        & Ma & L  & L  & V  & Me & J  & J  & V  & Me & L  & 5       \\
+        \hline
+        2                        & V  & L  & V  & Ma & Me & V  & L  & V  & Ma & Me & 7       \\
+        \hline
+        3                        & J  & L  & Ma & Ma & V  & Me & Ma & Me & L  & Ma & 8       \\
+        \hline
+        4                        & Me & Ma & L  & J  & V  & J  & L  & V  & J  & V  & 9       \\
+        \hline
+        Fils 1                   & Ma & L  & L  & V  & Me & Ma & L  & Ma & V  & Ma & 7       \\
+        \hline
+        6                        & Me & L  & J  & J  & L  & L  & J  & J  & Ma & L  & 6       \\
+        \hline
+    \end{tabular}
+    \caption{Population 1 (chromosomes)}\label{tab:population-1-chr}
+\end{table}
+
+\newpage
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Jours     & L           & Ma          & Me    & J          & V          \\
+        \hline
+        Parents 1 & 2, 3, 10    & 1           & 5, 9  & 6, 7       & 4, 8       \\
+        \hline
+        Parents 2 & 2, 7        & 4, 9        & 5, 10 & \_         & 1, 3, 6, 8 \\
+        \hline
+        Parents 3 & 2, 9        & 3, 4, 7, 10 & 6, 8  & 1          & 5          \\
+        \hline
+        Parents 4 & 3, 7        & 2           & 1     & 4, 6, 9    & 5, 8, 10   \\
+        \hline
+        Fils 1    & 2, 3, 7     & 1, 6, 8, 10 & 5     & \_         & 4, 9       \\
+        \hline
+        Parents 6 & 2, 5, 6, 10 & 9           & 1     & 3, 4, 7, 8 & \_         \\
+        \hline
+    \end{tabular}
+    \caption{Population 1 (jours)}\label{tab:population-1-jours}
+\end{table}
+
+\subsubsection{Itération 2}
+
+\textbf{\underline{Sélection}}
+
+Calculons la somme des fitness :
+\begin{equation}
+    \sum_{i=1}^6 fitness_i = 5 + 7 + 8 + 9 + 7 + 6 = 42
+\end{equation}
+
+\begin{figure}[!h]
+    \centering
+    \begin{tikzpicture}
+        \pie{21.4/Parent 4, 19/Parent 3, 16.7/Parent 2, 16.7/Fils 1, 14.3/Parent 6, 11.9/Parent 1}
+    \end{tikzpicture}
+    \caption{Roulette 2}\label{fig:roulette-2}
+\end{figure}
+
+Tirons deux nombres entre 0 et 100\% pour choisir les parents :
+\begin{itemize}
+    \item 26 $\rightarrow$ Parent 3
+    \item 81 $\rightarrow$ Parent 6
+\end{itemize}
+
+\textbf{\underline{Croisement}}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        \diagbox{Parents}{Cours} & 1                    & 2                   & 3                   & 4                   & 5                   & 6                   & 7                   & 8                   & 9                    & 10                  & Fitness \\
+        \hline
+        3                        & \cellcolor{myred}J   & \cellcolor{myred}L  & \cellcolor{myred}Ma & \cellcolor{myred}Ma & \cellcolor{myred}V & \cellcolor{myred}Me & \cellcolor{myred}Ma & \cellcolor{myred}Me & \cellcolor{myred}L  & \cellcolor{myred}Ma & 8       \\
+        \hline
+        6                        & \cellcolor{myblue}Me & \cellcolor{myblue}L & \cellcolor{myblue}J & \cellcolor{myblue}J  & \cellcolor{myblue}L & \cellcolor{myblue}L  & \cellcolor{myblue}J  & \cellcolor{myblue}J  & \cellcolor{myblue}Ma & \cellcolor{myblue}L  & 6       \\
+        \hline
+        Fils 2                   & \cellcolor{myred}J   & \cellcolor{myred}L  & \cellcolor{myred}Ma & \cellcolor{myred}Ma & \cellcolor{myred}V & \cellcolor{myblue}L  & \cellcolor{myblue}J  & \cellcolor{myblue}J  & \cellcolor{myblue}Ma & \cellcolor{myblue}L  & 7       \\
+        \hline
+    \end{tabular}
+    \caption{Croisement 2 (chromosomes)}\label{tab:croiseent-2-chr}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Jours  & L        & Ma      & Me & J       & V \\
+        \hline
+        Fils 2 & 2, 6, 10 & 3, 4, 9 & \_ & 1, 7, 8 & 5 \\
+        \hline
+    \end{tabular}
+    \caption{Croisement 2 (jours)}\label{tab:croisement-2-jours}
+\end{table}
+
+Le fils 2 a les conflits suivants :
+\begin{enumerate}
+    \item 0 cours en même temps donc $p_1 = 2$
+    \item 2 cours en même temps donc $p_2 = 1$
+    \item 2 cours en même temps donc $p_3 = 1$
+    \item 0 cours en même temps donc $p_4 = 2$
+    \item 2 cours en même temps donc $p_5 = 1$
+\end{enumerate}
+Donc, la fitness est de $7$.
+
+\textbf{\underline{Mutation}}
+
+Tirons un nombre aléatoire pour savoir si nous devons réaliser une mutation $ 0.08 < \mu = 0.2$, donc nous devons faire de mutation.
+
+Choisissons aléatoirement un cours entre 1 et 10 $\rightarrow$ 4 et affectons le à un jours aléatoire $\rightarrow$ Mercredi.
+
+Donc nous avons :
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        \diagbox{Parents}{Cours} & 1                  & 2                  & 3                   & 4                      & 5                  & 6                   & 7                   & 8                   & 9                    & 10                  & Fitness \\
+        \hline
+        Fils 2                   & \cellcolor{myred}J & \cellcolor{myred}L & \cellcolor{myred}Ma & \cellcolor{myorange}Me & \cellcolor{myred}V & \cellcolor{myblue}L  & \cellcolor{myblue}J  & \cellcolor{myblue}J  & \cellcolor{myblue}Ma & \cellcolor{myblue}L  & 9       \\
+        \hline
+    \end{tabular}
+    \caption{Mutation 2 (chromosome)}\label{tab:mutation-2-chr}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Jours  & L        & Ma   & Me & J       & V \\
+        \hline
+        Fils 2 & 2, 6, 10 & 3, 9 & 4  & 1, 7, 8 & 5 \\
+        \hline
+    \end{tabular}
+    \caption{Mutation 2 (jours)}\label{tab:mutation-2-jours}
+\end{table}
+
+Le fils 2 a les conflits suivants : 0 0 0 0 1
+\begin{enumerate}
+    \item 0 cours en même temps donc $p_1 = 2$
+    \item 0 cours en même temps donc $p_2 = 2$
+    \item 0 cours en même temps donc $p_3 = 2$
+    \item 0 cours en même temps donc $p_4 = 2$
+    \item 2 cours en même temps donc $p_5 = 1$
+\end{enumerate}
+Donc, la fitness est de $9$.
+
+\textbf{\underline{Évaluation}}
+
+Nous supprimons le parent 1 car $fitness_{parent_1} < fitness_{fils_2}$ et $\min(fitness) = fitness_{parent_1}$ donc nous avons :
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        \diagbox{Parents}{Cours} & 1  & 2  & 3  & 4  & 5  & 6  & 7  & 8  & 9  & 10 & Fitness \\
+        \hline
+        Fils 2                   & J  & L  & Ma & Me & V  & L  & J  & J  & Ma & L  & 9       \\
+        \hline
+        2                        & V  & L  & V  & Ma & Me & V  & L  & V  & Ma & Me & 7       \\
+        \hline
+        3                        & J  & L  & Ma & Ma & V  & Me & Ma & Me & L  & Ma & 8       \\
+        \hline
+        4                        & Me & Ma & L  & J  & V  & J  & L  & V  & J  & V  & 9       \\
+        \hline
+        Fils 1                   & Ma & L  & L  & V  & Me & Ma & L  & Ma & V  & Ma & 7       \\
+        \hline
+        6                        & Me & L  & J  & J  & L  & L  & J  & J  & Ma & L  & 6       \\
+        \hline
+    \end{tabular}
+    \caption{Population 2 (chromosomes)}\label{tab:population-2-chr}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Jours     & L           & Ma          & Me    & J          & V          \\
+        \hline
+        Fils 2    & 2, 6, 10    & 3, 9        & 4     & 1, 7, 8    & 5          \\
+        \hline
+        Parents 2 & 2, 7        & 4, 9        & 5, 10 & \_         & 1, 3, 6, 8 \\
+        \hline
+        Parents 3 & 2, 9        & 3, 4, 7, 10 & 6, 8  & 1          & 5          \\
+        \hline
+        Parents 4 & 3, 7        & 2           & 1     & 4, 6, 9    & 5, 8, 10   \\
+        \hline
+        Fils 1    & 2, 3, 7     & 1, 6, 8, 10 & 5     & \_         & 4, 9       \\
+        \hline
+        Parents 6 & 2, 5, 6, 10 & 9           & 1     & 3, 4, 7, 8 & \_         \\
+        \hline
+    \end{tabular}
+    \caption{Population 2 (jours)}\label{tab:population-2-jours}
+\end{table}
+
+% \subsubsection{Itération 3}
+
+% \textbf{\underline{Sélection}}
+
+% \textbf{\underline{Croisement}}
+
+% \textbf{\underline{Mutation}}
+
+% \textbf{\underline{Évaluation}}
+
+\subsubsection{Bilan}
+
+Nous voyons étape après étape nous améliorons notre solution pour s'approcher de la solution optimale qui a une fitness de 10.
