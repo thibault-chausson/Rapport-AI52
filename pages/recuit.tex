@@ -1,3 +1,207 @@
 %! Author = thibaultchausson
 %! Date = 11/12/2023
 
+\subsection {Paramètres du problème}
+
+Pour appliquer la méthode du recuit simulé, il nous faut premièrement en définir les paramètres.
+
+Tout d'abord, la solution initiale est obtenue en générant aléatoirement une répartition des cours, dans les limites des contraintes fortes :
+
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        \diagbox{Solution}{Cours} & 1 & 2  & 3  & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+        \hline
+        $S_0$                     & J & Me & Ma & V & V & J & L & V & V & Me \\
+        \hline
+    \end{tabular}
+    \caption{$S_0$ recuit simulé}\label{tab:s-0-recuit}
+\end{table}
+
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Jours & L & Ma & Me    & J   & V          \\
+        \hline
+        $S_0$ & 7 & 3  & 2, 10 & 1,6 & 4, 5, 8, 9 \\
+        \hline
+    \end{tabular}
+    \caption{$S_0$ initiale (jours)}\label{tab:s-0-recuit-jour}
+\end{table}
+
+Nous pouvons maintenant étudier la fitness de cette solution :
+
+\begin{itemize}
+    \item Classe 1 : 1 conflit, fitness égale à 1
+    \item Classe 2 : 2 conflits, fitness égale à 0
+    \item Classe 3 : 1 conflit, fitness égale à 1
+    \item Classe 4 : 1 conflit, fitness égale à 1
+    \item Classe 5 : 1 conflit, fitness égale à 1
+\end{itemize}
+
+Pour une fitness totale de 4.
+
+Pour des raisons pratiques, on limitera le recuit simulé à 5 itérations par palier, à un facteur de refroidissement $\lambda = 0,5$, à une température initiale $T_0 = 2$, et à un seuil de $0,3$, afin de n'effectuer que 15 opérations.
+
+Nous définissons une solution voisine comme toute solution respectant les contraintes fortes obtenues en déplaçant un cours à un jour adjacent.
+
+On choisit la transformation à effectuer en choisissant un entier $c$ non nul dans l'intervalle $[-10;10]$.
+
+Un nombre négatif correspond à un déplacement du cours numéroté $|c|$ au jour précédent (nous considérons que le jour précédant le lundi est le vendredi), et inversement pour un nombre positif.
+
+\subsection {Application}
+
+{\setlength{\parindent}{0cm}
+
+On commence l'algorithme avec $T=2$
+
+    On tire au hasard et on obtient $c = -1$
+
+    On recule donc le cours numéro 1 au jour précédent, qui est le Mercredi.
+
+On obtient donc la solution suivante :
+
+
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            Jours & L & Ma & Me       & J & V          \\
+            \hline
+            $S_0$ & 7 & 3  & 1, 2, 10 & 6 & 4, 5, 8, 9 \\
+            \hline
+        \end{tabular}\caption{$S_1$ recuit simulé}
+    \end{table}
+
+    Cette solution ayant une fitness de 5, le delta de fitness est de $\Delta f = 1$, et la nouvelle solution est immédiatement adoptée.
+
+\textbf{Itération suivante :}
+
+    $c = 2$
+
+    Nouvelle solution :
+
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            Jours & L & Ma & Me    & J    & V          \\
+            \hline
+            $S_0$ & 7 & 3  & 1, 10 & 2, 6 & 4, 5, 8, 9 \\
+            \hline
+        \end{tabular}\caption{$S_2$ recuit simulé}
+    \end{table}
+
+    $\Delta f = 1$
+
+    Adoption immédiate
+
+    \textbf{Itération suivante :}
+
+    $c = 9$
+
+    Nouvelle solution :
+
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            Jours & L    & Ma & Me    & J    & V       \\
+            \hline
+            $S_0$ & 7, 9 & 3  & 1, 10 & 2, 6 & 4, 5, 8 \\
+            \hline
+        \end{tabular}\caption{$S_3$ recuit simulé}
+    \end{table}
+
+    $\Delta f = 1$
+
+    Adoption immédiate
+
+    \textbf{Itération suivante :}
+
+    $c = -1$
+
+    Nouvelle solution :
+
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            Jours & L    & Ma   & Me & J    & V       \\
+            \hline
+            $S_0$ & 7, 9 & 1, 3 & 10 & 2, 6 & 4, 5, 8 \\
+            \hline
+        \end{tabular}\caption{$S_4$ recuit simulé}
+    \end{table}
+
+    $\Delta f = -1$
+
+    Probabilité d'acceptation : $0.6065306597126334$
+
+    Tirage de $x$ :
+    $x = 0.280299954665289$
+
+    Solution acceptée
+
+    \textbf{Itération suivante :}
+
+    $c = -6$
+
+    Nouvelle solution :
+
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            Jours & L    & Ma   & Me    & J & V       \\
+            \hline
+            $S_0$ & 7 ,9 & 1 ,3 & 6, 10 & 2 & 4, 5, 8 \\
+            \hline
+        \end{tabular}\caption{$S_5$ recuit simulé}
+    \end{table}
+
+    $\Delta f = 0$
+
+    Adoption immédiate
+
+    Après un cycle, on constate que la fitness est passée de 4 à 6.
+
+On réduit la température d'un facteur de $0.5$, et on obtient $T_1 = 1$, puis on recommmence un cycle, à la fin duquel on atteint la solution suivante :
+
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            Jours & L    & Ma      & Me   & J    & V \\
+            \hline
+            $S_0$ & 8, 9 & 3, 7, 3 & 1, 6 & 2, 5 & 4 \\
+            \hline
+        \end{tabular}\caption{$S_{10}$ recuit simulé}
+    \end{table}
+
+    Pour une fitness de 7.
+
+    Arpès un dernier cycle à une température de $T_2 = 0.5$, on finit sur la solution suivante :
+
+\newpage
+
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            Jours & L    & Ma      & Me & J       & V \\
+            \hline
+            $S_0$ & 8, 9 & 3, 7, 3 & 6  & 1, 2, 5 & 4 \\
+            \hline
+        \end{tabular}\caption{$S_{15}$ recuit simulé}
+    \end{table}
+
+    Avec une fitness de 8. La température suivante, $T_3 = 0.25$, étant inférieure au seuil, l'algorithme s'arrête ici.
+
+L'algorithme est donc efficace. D'autres tests nous ont permis de constater qu'abaisser le seuil à 0.2, amenant le nombre de cycles à 4, suffit quasi-systématiquement à atteindre la fitness maximale de 10.
+
+}
