@@ -5,4 +5,23 @@
 
 La méthode de la colonie de fourmis étant spécialisée dans la résolutions de problèmes analogues à celui du marchand de commerce, nous allons tout d'abord devoir la redéfinir pour être compatible avec notre sujet.
 
-Il faut d'abord définir ce que représenteront les noeuds et les 
+Il faut d'abord définir ce que représenteront les noeuds et les chemins du problème.
+
+Une première approche serait de considérer chaque noeud comme une configuration possible de l'emploi du temps, et chaque chemin comme le passage d'une configuration à une autre.
+
+Cependant, cette approche s'avère rapidement irréalisable. Chaque cours peut se trouver dans 6 configurations : assigné à un des 5 jours de la semaine, ou non-assigné.
+
+Avec 10 cours, on atteint $6^10 = ~6E7$ noeuds, ce qui, au delà des problèmes de mémoire, demanderait aux fourmis un nombre de générations astronomique pour faire le moindre progrès.
+
+Il s'avère en réalité que le problème de l'affectation d'emploi du temps est assez peu compatible avec la méthode de la colonie de fourmis. Il est néanmoins possible d'en utiliser une version modifiée.
+
+Pour limiter le nombre de neouds, on considérera 11 noeuds, le premier représentant l'emploi du temps initial vide, et chaque noeud suivant représentant un des 10 cours à affecter.
+
+Chaque pair de noeuds consécutifs sera séparée par 5 chemins, représentant les 5 jours de la semaine auxquels peut être affecté le prochain cours.
+
+Les fourmis parcoureront donc tous les noeuds dans le même ordre, mais en empruntant des chemins différents entre chaque noeud.
+
+Au lieu de pondérer le choix du prochain noeud par sa distance, les fourmis calculeront le nombre de conflits engendrés par le choix de chaque chemin.
+
+A la fin de leur parcours, les fourmis déposeront sur leur chemin une trace proportionelle au score de fitness de l'emploi du temps obtenu.
+
