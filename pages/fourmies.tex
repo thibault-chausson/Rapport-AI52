@@ -15,7 +15,7 @@ Avec 10 cours, on atteint $6^{10} = ~6E7$ noeuds, ce qui, au delà des problème
 
 Il s'avère en réalité que le problème de l'affectation d'emploi du temps est assez peu compatible avec la méthode de la colonie de fourmis. Il est néanmoins possible d'en utiliser une version modifiée.
 
-Pour limiter le nombre de neouds, on considérera 11 noeuds, le premier représentant l'emploi du temps initial vide, et chaque noeud suivant représentant un des 10 cours à affecter.
+Pour limiter le nombre de noeuds, on considérera 11 noeuds, le premier représentant l'emploi du temps initial vide, et chaque noeud suivant représentant un des 10 cours à affecter.
 
 Chaque paire de noeuds consécutifs sera séparée par 5 chemins, représentant les 5 jours de la semaine auxquels peut être affecté le prochain cours.
 
@@ -31,13 +31,149 @@ Avec $\alpha$ et $\beta$ deux réels positifs, $\tau_{n,c}$ la trace de phéromo
 
 A la fin de leur parcours, les fourmis déposeront sur leur chemin une trace proportionelle au score de fitness de l'emploi du temps obtenu, et on met à jour la trace via la formule :
 
-$$\tau_{n,c} = (1-\rho)\tau_{n,c} + \sum_{k \in K}{\Delta^k_{n,c}}$$
+$$\tau_{n,c} = (1-\rho)\tau_{n,c} + Q\sum_{k \in K}{\Delta^k_{n,c}}$$
 
-Avec $K$ l'ensemble des fourmis, $\rho \in ]0;1[$ le facteur d'évaporation, et $\Delta^k_{n,c}$ égal à la fitness de la fourmi $k$ si elle a emprunté le chemin $(n,c)$, et $0$ sinon.
+Avec $K$ l'ensemble des fourmis, $\rho \in ]0;1[$ le facteur d'évaporation, $Q$ une constante, et $\Delta^k_{n,c}$ égal à la fitness de la fourmi $k$ si elle a emprunté le chemin $(n,c)$, et $0$ sinon.
 
 Une fois le nombre d'itérations voulues passées, on retourne la fourmi de la population finale ayant la meilleure fitness.
 
 \subsection{Application numérique}
+
+On initialise l'algorithme avec les constantes suivantes :
+
+\begin{itemize}
+    \item $\alpha = 0.5$
+    \item $\beta = 0.5$
+    \item $Q = 1$
+    \item $\rho = 0.7$
+    \item $\tau_0 = 0.001$
+    \item Population de fourmis : $10$
+    \item Nombre d'iterations : $3$
+\end{itemize}
+
+La première fourmi se trouve au noeud $0$. Les probabilités de choix pour le prochain chemin sont :
+
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Chemin & 1       & 2       & 3       & 4       & 5        \\
+        \hline
+        Probabilité     & 0.2 & 0.2 & 0.2 & 0.2 & 0.2 \\
+        \hline
+    \end{tabular}
+    \caption{Probabilités de choix de la fourmi 1 pour le noeud 1 à la génération 1}\label{tab:voeux-etudiant}
+\end{table}
+
+Elle choisit le noeud $3$. Les probabilités de choix pour le noeud 2 sont ainsi : 
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Chemin & 1       & 2       & 3       & 4       & 5        \\
+        \hline
+        Probabilité     & 0.22 & 0.22 & 0.12 & 0.22 & 0.22 \\
+        \hline
+    \end{tabular}
+    \caption{Probabilités de choix de la fourmi 1 pour le noeud 2 à la génération 1}\label{tab:voeux-etudiant}
+\end{table}
+
+La fourmi choisit le noeud $1$. On continue jusqu'au noeud $10$, et on obtient la répartition suivante :
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        Jour & 1       & 2       & 3       & 4       & 5        & Fitness\\
+        \hline
+        Cours & 2, 4, 9 &  & 1, 5, 6, 8 & & 3, 7, 10 & 6\\
+        \hline
+    \end{tabular}
+    \caption{Répartition de l'emploi du temps de la fourmi 1 à la génération 1}\label{tab:voeux-etudiant}
+\end{table}
+
+Après avoir répété l'opération pour les 10 fourmis, on obtient comme élite la fourmi 6 :
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        Jour & 1       & 2       & 3       & 4       & 5        & Fitness       \\
+        \hline
+        Cours     & 2 & 1, 5, 7, 9, 10 & 3 & & 4, 6, 8 & 8\\
+        \hline
+    \end{tabular}
+    \caption{Répartition de l'emploi du temps de la fourmi 6 à la génération 1}\label{tab:voeux-etudiant}
+\end{table}
+
+La trace de phéromones est la suivante :
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}    
+        \hline
+        \diagbox{Noeud}{Chemin} & 1 & 2 & 3 & 4 & 5 \\
+        \hline
+        1 & 1.0e-03 & 2.9e+01 & 1.2e+01 & 1.5e+01 & 1.4e+01 \\
+        \hline
+        2 & 2.3e+01 & 1.0e+01 & 1.7e+01 & 1.4e+01 & 6.0e+00 \\
+        \hline
+        3 & 1.0e-03 & 1.9e+01 & 8.0e+00 & 8.0e+00 & 3.5e+01 \\
+        \hline
+        4 & 1.0e+01 & 2.2e+01 & 1.5e+01 & 7.0e+00 & 1.6e+01 \\
+        \hline
+        5 & 9.0e+00 & 2.0e+01 & 1.8e+01 & 1.7e+01 & 6.0e+00 \\
+        \hline
+        6 & 7.0e+00 & 1.8e+01 & 1.6e+01 & 1.0e-03 & 2.9e+01 \\
+        \hline
+        7 & 1.2e+01 & 1.8e+01 & 7.0e+00 & 2.3e+01 & 1.0e+01 \\
+        \hline
+        8 & 6.0e+00 & 1.2e+01 & 2.8e+01 & 7.0e+00 & 1.7e+01 \\
+        \hline
+        9 & 2.0e+01 & 3.6e+01 & 1.0e-03 & 1.0e-03 & 1.4e+01 \\
+        \hline
+        10 & 1.0e+01 & 3.9e+01 & 1.0e-03 & 1.0e-03 & 2.1e+01 \\
+        \hline
+    \end{tabular}
+    \caption{Trace laissée par la génération 1}\label{tab:voeux-etudiant}
+\end{table}
+
+On passe maintenant à la deuxième génération de fourmis :
+
+La première fourmi se trouve au noeud $0$. Les probabilités de choix pour le prochain chemin sont :
+
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Chemin & 1       & 2       & 3       & 4       & 5        \\
+        \hline
+        Probabilité     & 0.001 & 0.326 & 0.210 & 0.235 & 0.228 \\
+        \hline
+    \end{tabular}
+    \caption{Probabilités de choix de la fourmi 1 pour le noeud 1 à la génération 2}\label{tab:voeux-etudiant}
+\end{table}
+
+Elle choisit le noeud $4$.
+
+On continue ainsi jusqu'à la dernière génération, et on obtient cette élite pour la génération 3 : 
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        Jour & 1       & 2       & 3       & 4       & 5        & Fitness       \\
+        \hline
+        Cours     & 8, 9 & 5, 10 & 4, 6, 7 & 3 & 1, 2 & 10\\
+        \hline
+    \end{tabular}
+    \caption{Répartition de l'emploi du temps de la meilleure fourmi à la génération 1}\label{tab:voeux-etudiant}
+\end{table}
+
+On a réussi à atteindre une solution pour laquelle la fitness est maximale.
 
 \subsection{Retour critique}
 
