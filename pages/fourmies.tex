@@ -11,17 +11,38 @@ Une première approche serait de considérer chaque noeud comme une configuratio
 
 Cependant, cette approche s'avère rapidement irréalisable. Chaque cours peut se trouver dans 6 configurations : assigné à un des 5 jours de la semaine, ou non-assigné.
 
-Avec 10 cours, on atteint $6^10 = ~6E7$ noeuds, ce qui, au delà des problèmes de mémoire, demanderait aux fourmis un nombre de générations astronomique pour faire le moindre progrès.
+Avec 10 cours, on atteint $6^{10} = ~6E7$ noeuds, ce qui, au delà des problèmes de mémoire, demanderait aux fourmis un nombre de générations astronomique pour faire le moindre progrès.
 
 Il s'avère en réalité que le problème de l'affectation d'emploi du temps est assez peu compatible avec la méthode de la colonie de fourmis. Il est néanmoins possible d'en utiliser une version modifiée.
 
 Pour limiter le nombre de neouds, on considérera 11 noeuds, le premier représentant l'emploi du temps initial vide, et chaque noeud suivant représentant un des 10 cours à affecter.
 
-Chaque pair de noeuds consécutifs sera séparée par 5 chemins, représentant les 5 jours de la semaine auxquels peut être affecté le prochain cours.
+Chaque paire de noeuds consécutifs sera séparée par 5 chemins, représentant les 5 jours de la semaine auxquels peut être affecté le prochain cours.
 
 Les fourmis parcoureront donc tous les noeuds dans le même ordre, mais en empruntant des chemins différents entre chaque noeud.
 
 Au lieu de pondérer le choix du prochain noeud par sa distance, les fourmis calculeront le nombre de conflits engendrés par le choix de chaque chemin.
 
-A la fin de leur parcours, les fourmis déposeront sur leur chemin une trace proportionelle au score de fitness de l'emploi du temps obtenu.
+Ainsi, la probabilité qu'un chemin $c$ soit choisi pour passer du noeud $n-1$ au neoud $n$ est décrite par la formule suivante : 
 
+$$P_{n,c} = \frac{\tau^{\alpha}_{n,c}\eta^{\beta}_{n,c}}{\sum^{5}_{d = 0}{\tau^{\alpha}_{n,d}\eta^{\beta}_{n,d}}}$$
+
+Avec $\alpha$ et $\beta$ deux réels positifs, $\tau_{n,c}$ la trace de phéromones présente sur le chemin $c$ entre les noeuds $n-1$ et $n$, et $\eta_{n,c} = \frac{1}{1 + conflits_{n,c}}$, avec $conflits_{n,c}$ le nombre de classes devant assister à la fois au cours $n$, et à au moins un autre cours déjà assigné au jour $c$.
+
+A la fin de leur parcours, les fourmis déposeront sur leur chemin une trace proportionelle au score de fitness de l'emploi du temps obtenu, et on met à jour la trace via la formule :
+
+$$\tau_{n,c} = (1-\rho)\tau_{n,c} + \sum_{k \in K}{\Delta^k_{n,c}}$$
+
+Avec $K$ l'ensemble des fourmis, $\rho \in ]0;1[$ le facteur d'évaporation, et $\Delta^k_{n,c}$ égal à la fitness de la fourmi $k$ si elle a emprunté le chemin $(n,c)$, et $0$ sinon.
+
+Une fois le nombre d'itérations voulues passées, on retourne la fourmi de la population finale ayant la meilleure fitness.
+
+\subsection{Application numérique}
+
+\subsection{Retour critique}
+
+Comme vu plus haut, la méthode de la colonie de fourmis ne se prette pas particulièrement à la résolution de ce genre de problème. Bien que nous finissions par trouver une solution dont la fitness est maximale, il s'agit vraisemblablement plus de hasard que d'une réelle efficacité de la méthode.
+
+Le principal obstacle à la conception d'un algorithme de colonie de fourmis efficace pour résoudre ce problème est due à la nature de problème d'affectation de notre problème.
+
+Etant donné qu'aucun "chemin" de l'arbre n'est intrinsèquement meilleur qu'un autre, la qualité de chaque chemin dépendant des chemins empruntés précédement, les phéromones se révèlent peu utiles dans la découverte d'une solution optimale.
