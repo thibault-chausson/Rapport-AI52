@@ -21,7 +21,7 @@ Pour limiter le nombre de n\oe uds, on considérera 11 n\oe uds, le premier repr
 
 Chaque paire de n\oe uds consécutifs sera séparée par 5 chemins, représentant les 5 jours de la semaine auxquels peut être affecté le prochain cours.
 
-Les fourmis parcourront donc tous les n\oe uds dans le même ordre, mais en empruntant des chemins différents entre chaque n\oe ud, comme représenté sur ce graphe : 
+Les fourmis parcourront donc tous les n\oe uds dans le même ordre, mais en empruntant des chemins différents entre chaque n\oe ud, comme représenté sur ce graphe :
 
 \begin{center}
     \begin{tikzpicture}[node distance={15mm}, main/.style = {circle}]
@@ -34,9 +34,19 @@ Les fourmis parcourront donc tous les n\oe uds dans le même ordre, mais en empr
         \node[main,draw] (9) [right of=8] {$9$};
         \node[main,draw] (10) [right of=9] {$10$};
 
-        \foreach \m in {0,1,2,3,4}{
-            \draw[->] (0) to [out=60-30*\m,in=120+30*\m,looseness=1.5] (1);
-        }
+        % Lien avec L
+        \draw[->] (0) to [out=60,in=120,looseness=1.5] node[above, font=\fontsize{6pt}{7.2pt}\selectfont] {L} (1);
+        % Lien avec M
+        \draw[->] (0) to [out=30,in=150,looseness=1.5] node[above, font=\fontsize{6pt}{7.2pt}\selectfont] {M} (1);
+        % Lien avec M
+        \draw[->] (0) to node[above, font=\fontsize{6pt}{7.2pt}\selectfont] {M} (1);
+        % Lien avec J
+        \draw[->] (0) to [out=-30,in=210,looseness=1.5] node[above, font=\fontsize{6pt}{7.2pt}\selectfont] {J} (1);
+        % Lien avec V
+        \draw[->] (0) to [out=-60,in=-120,looseness=1.5] node[above, font=\fontsize{6pt}{7.2pt}\selectfont] {V} (1);
+
+
+        % Autres liens (sans lettres)
         \foreach \m in {0,1,2,3,4}{
             \draw[->] (1) to [out=60-30*\m,in=120+30*\m,looseness=1.5] (2);
         }
@@ -49,8 +59,9 @@ Les fourmis parcourront donc tous les n\oe uds dans le même ordre, mais en empr
         \foreach \m in {0,1,2,3,4}{
             \draw[->] (9) to [out=60-30*\m,in=120+30*\m,looseness=1.5] (10);
         }
-    \end{tikzpicture} 
+    \end{tikzpicture}
 \end{center}
+
 
 Chaque chemin, de haut en bas, représente un jour de lundi à vendredi.
 
@@ -164,7 +175,7 @@ On continue jusqu'au n\oe ud $10$, et on obtient le chemin suivant :
 \end{center}
 
 
-Ce qui correspond avec la répartition suivate :
+Ce qui correspond avec la répartition suivante :
 
 \begin{table}[H]
     \centering
@@ -226,7 +237,8 @@ La trace de phéromones est la suivante :
 
 On passe maintenant à la deuxième génération de fourmis :
 
-La première fourmi se trouve au n\oe ud $0$. Les probabilités de choix pour le prochain chemin sont :
+La première fourmi se trouve au n\oe ud $0$.
+Les probabilités de choix pour le prochain chemin sont :
 
 
 \begin{table}[!h]
@@ -305,7 +317,7 @@ Qui donne donc cette répartition :
         Cours & 8, 9 & 5, 10 & 4, 6, 7 & 3 & 1, 2 & 10      \\
         \hline
     \end{tabular}
-    \caption{Répartition de l'emploi du temps de la meilleure fourmi à la génération 1}\label{tab:fourmi-finale}
+    \caption{Répartition de l'emploi du temps de la meilleure fourmi à la génération 2}\label{tab:fourmi-finale}
 \end{table}
 
 On a réussi à atteindre une solution pour laquelle la fitness est maximale.
