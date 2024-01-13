@@ -240,6 +240,10 @@ literate=
 
 \RequirePackage{colortbl}
 
+% Diagonale cellule
+\RequirePackage{diagbox}
+
+
 %Tableur sur plusieurs pages
 \RequirePackage{array,multirow,makecell}
 \newcolumntype{M}[1]{>{\smallskip}m{#1}}
@@ -267,7 +271,7 @@ literate=
 %Équations
 
 \RequirePackage{amsmath}
-\usepackage{stmaryrd}
+\RequirePackage{stmaryrd}
 
 %euro
 
@@ -351,3 +355,9 @@ minimum height=2em]
 \hyphenpenalty 10000000
 
 \newcommand{\tikzmark}[1]{\tikz[overlay, remember picture] \coordinate (#1);}
+
+\RequirePackage{pgf-pie}
+
+\definecolor{myred}{rgb}{0.97, 0.5, 0.5}
+\definecolor{myblue}{rgb}{0.7, 0.7, 1}
+\definecolor{myorange}{rgb}{1, 0.8, 0.6}

@@ -1,3 +1,165 @@
 %! Author = thibaultchausson
 %! Date = 11/12/2023
 
+%!TEX root = ../main.tex
+
+\subsection{Planning}
+
+L'objectif de ce projet est de présenter les métaheuristiques suivantes sur l'optimisation d'emploi du temps :
+\begin{enumerate}
+    \item Algorithme génétique
+    \item Optimisation par colonies de fournies
+    \item Optimisation par essaim particulaire
+    \item Recuit simulé
+    \item Recherche tabou
+\end{enumerate}
+
+Pour ce faire, nous allons définir le problème de la manière suivante.
+Soient, $n \in \mathbb{N}^{*+}$, $s \in \llbracket 1 ,7 \rrbracket$, dans notre cas $s = 5$ qui sera le nombre de jours de la semaine, $c \in \llbracket 1 ,n \rrbracket$, le nombre de cours disponible, avec $n = 10 $.
+Prenons la matrice creuse $M \in \mathbb{M}_{s,c}$, ou les $1$ représenter les cours dispensés ce jour :
+
+\[
+    M = \qquad \bordermatrix{~  & \tikzmark{harrowleft} Lundi & Mardi & Mercredi & Jeudi
+    & Vendredi\tikzmark{harrowright}  \cr
+    \tikzmark{varrowtop}
+    1 : GE41 & 0 & 1 & 0 & 0 & 0 \cr
+    2 : CC01 & 1 & 0 & 0 & 0 & 0 \cr
+    3 : AI50 & 1 & 0 & 0 & 0 & 0 \cr
+    4 : AP4A & 0 & 0 & 0 & 0 & 1 \cr
+    5 : EI03 & 0 & 0 & 1 & 0 & 0 \cr
+    6 : LJ00 & 0 & 0 & 0 & 1 & 0 \cr
+    7 : SY41 & 0 & 0 & 0 & 1 & 0 \cr
+    8 : SI40 & 0 & 0 & 0 & 0 & 1 \cr
+    9 : IT42 & 0 & 0 & 1 & 0 & 0 \cr
+    \tikzmark{varrowbottom} 10 : WE4A & 1 & 0 & 0 & 0 & 0 \cr
+    }
+\]
+\tikz[overlay,remember picture] {
+    \draw[->] ([yshift=3ex]harrowleft) -- ([yshift=3ex]harrowright)
+    node[midway,above] {\scriptsize Jours de la semaine};
+    \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtop) -- ([xshift=-2ex]varrowbottom)
+    node[near end,left] {\scriptsize Cours};
+}
+
+Pour simplifier les différentes exécutions de ce problème, nous considérons qu'un cours dur une journée entière.
+De plus, nous avons suffisamment de salle de cours et professeurs pour dispenser l'ensemble de ces cours.
+
+\subsection{Classes}
+
+Nous considérons un ensemble $\mathbb{C}^d$ de $d \in \mathbb{N}^{*+}$ classe constitué de $e \in \mathbb{N}^{*+}$ v\oe ux de cours, comme cela peu se faire à l'\gls{UTBM}.
+Donc la liste des v\oe ux et de la forme $(\mathbb{C}^d)^e$.
+Ici $d = 5$ et $e = 3$.
+Représenté de la manière suivante :
+
+\begin{center}
+    \begin{tabular}{|c|c|}
+        \hline
+        Classe   & Cours                        \\
+        \hline
+        Classe 1 & 1 : GE41, 3 : AI50, 6 : LJ00 \\
+        \hline
+        Classe 2 & \ldots                       \\
+        \hline
+        Classe 3 & \ldots                       \\
+        \hline
+        Classe 4 & \ldots                       \\
+        \hline
+        Classe 5 & \ldots                       \\
+        \hline
+    \end{tabular}
+\end{center}
+
+Nous considérons que deux classes peuvent avoir le même cours, ainsi la direction aux formations pédagogiques affectera assez de professeurs.
+
+\subsection{Contraintes}
+
+Les contraintes fortes :
+\begin{itemize}
+    \item Tous les cours voulus par les classes dans l'emploi du temps
+    \item Au moins $e = 3$ jours avec des cours dispensé, car les étudiants doivent participer à $e = 3$ cours
+\end{itemize}
+
+La contrainte faible :
+\begin{itemize}
+    \item Satisfaire les v\oe ux de tous les étudiants (classes)
+\end{itemize}
+
+\subsection{Fitness}
+
+Nous définissions la $fitness$ comme suit : $p_i$ le score d'une classe, avec $p \in \llbracket 0 , 2 \rrbracket$ et $i \in \llbracket 1 , d \rrbracket$.
+Si :
+\begin{itemize}
+    \item Aucun cours en même temps $p_i = 2$
+    \item Deux cours en même temps $p_i = 1$
+    \item Trois cours en même temps $p_i = 0$
+\end{itemize}
+
+Donc, nous avons :
+
+\begin{equation}
+    fitness = \sum_{i = 1}^{d} p_i\label{eq:fitness}
+\end{equation}
+
+Ainsi, nous avons $\max(fitness) = 2 \times d$, donc $\max(fitness) = 10$
+
+\subsection{Une solution}
+
+Prenons les v\oe ux des classes suivantes :
+
+\begin{center}
+    \begin{tabular}{|c|c|}
+        \hline
+        Classe   & Cours                         \\
+        \hline
+        Classe 1 & 1 : GE41, 3 : AI50, 6 : LJ00  \\
+        \hline
+        Classe 2 & 4 : AP4A, 5 : EI03, 9 : IT42  \\
+        \hline
+        Classe 3 & 3 : AI 50, 4 : AP4A, 8 : SI40 \\
+        \hline
+        Classe 4 & 2 : CC01, 4 : AP4A, 5 : EI03  \\
+        \hline
+        Classe 5 & 2 : CC01, 3 : AI50, 10 : WE4A \\
+        \hline
+    \end{tabular}
+\end{center}
+
+Le planning suivant :
+
+\[
+    M = \qquad \bordermatrix{~  & \tikzmark{harrowleft} Lundi & Mardi & Mercredi & Jeudi
+    & Vendredi\tikzmark{harrowright}  \cr
+    \tikzmark{varrowtop}
+    1 : GE41 & 1 & 0 & 0 & 0 & 0 \cr
+    2 : CC01 & 0 & 0 & 0 & 1 & 0 \cr
+    3 : AI50 & 0 & 1 & 0 & 0 & 0 \cr
+    4 : AP4A & 0 & 0 & 1 & 0 & 0 \cr
+    5 : EI03 & 1 & 0 & 0 & 0 & 0 \cr
+    6 : LJ00 & 0 & 0 & 1 & 0 & 0 \cr
+    7 : SY41 & 0 & 0 & 0 & 0 & 1 \cr
+    8 : SI40 & 0 & 0 & 0 & 1 & 0 \cr
+    9 : IT42 & 0 & 1 & 0 & 0 & 0 \cr
+    \tikzmark{varrowbottom} 10 : WE4A & 0 & 0 & 0 & 0 & 1 \cr
+    }
+\]
+\tikz[overlay,remember picture] {
+    \draw[->] ([yshift=3ex]harrowleft) -- ([yshift=3ex]harrowright)
+    node[midway,above] {\scriptsize Jours de la semaine};
+    \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtop) -- ([xshift=-2ex]varrowbottom)
+    node[near end,left] {\scriptsize Cours};
+}
+
+Ainsi, nous avons la fitness suivante :
+
+\begin{equation}
+    fitness = \sum_{i = 1}^{d} p_i = 2 + 2 + 2 + 2 + 2 = 10 = \max(fitness)\label{eq:fitness_opti}
+\end{equation}
+
+Donc, ce planning optimise les v\oe ux des étudiants.
+
+\newpage
+
+\subsection{Généralisation du problème}\label{subsec:generalisation-du-probleme}
+
+\input{pages/uml}
+

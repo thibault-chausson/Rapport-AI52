@@ -1,3 +1,52 @@
 %! Author = thibaultchausson
 %! Date = 11/12/2023
 
+La résolution de notre problème grâce à un essaim particulaire n'est pas une chose aisée.
+En effet, cet algorithme ne semble pas très bien se prêter aux problèmes d'optimisation d'emplois du temps, à cause de l'encodage d'une solution.
+Dans un algorithme PSO, le calcul pour mettre à jour la vélocité des particules fait appel aux solutions elles-mêmes, mais il n'est, en l'état, pas possible de calculer la différence entre une solution et une autre, en faisant en sorte que le calcul ait un sens au niveau de l'algorithme.
+On pourrait bien entendu traduire tous les jours en chiffres, mais cela n'arrangerait pas le problème du fait que la descente en profondeur aurait extrêmement de mal à se faire, car cette différence n'a pas réellement de sens.
+$$v_i(t + 1) = \omega v_i(t) + c_1 r_1 [pbest_i(t) - x_i(t)] + c_2 r_2 [g_best(t) - x_i(t)]$$
+Une solution qui nous est venue à l'esprit pour palier à ce problème est de ne pas travailler sur 1 solution = 1 particule, mais plutôt sur 1 UV = 1 particule.
+On aurait alors un tableau d'UVs avec leur jour correspondant sur lequel il serait plus simple de travailler.
+Malheureusement, il se dresse à nous un nouveau problème, celui du calcul de la fitness.
+
+Chaque UV représentant une particule, il faut mettre à jour leur vélocité individuellement, ce qui demande à recalculer la fitness pour chacune d'entre elles.
+Malheureusement, pour certaines classes, un placement d'UV peut tout à fait être compatible avec leurs autres v\oe ux, mais dans une autre, il peut y avoir un conflit.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
+        \hline
+        UV   & 1  & 2 & 3 & 4 & 5  & 6 & 7 & 8 & 9  & 10 \\
+        \hline
+        Jour & Ma & L & L & V & Me & J & J & V & Me & L  \\
+        \hline
+    \end{tabular}
+    \caption{Explosion de notre solution initiale en traitant une UV comme une particule}\label{tab:particules}
+\end{table}
+
+Pour les v\oe ux des étudiants suivants :
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Classes & 1       & 2       & 3       & 4       & 5        \\
+        \hline
+        UVs     & 1, 2, 3 & 4, 5, 9 & 3, 4, 8 & 2, 4, 5 & 2, 3, 10 \\
+        \hline
+    \end{tabular}
+    \caption{Voeux des étudiants}\label{tab:voeux-etudiant-particules}
+\end{table}
+
+Il y aurait par exemple le problème suivant avec les calculs de fitness : Pour la classe 1, la fitness de l'UV 2 serait à 1, car il y a 1 conflit, mais pour la classe 4, elle serait à 2, car il n'y a pas de conflits.
+
+Cela signifie donc que la fitness ne peut pas être calculée sur chaque particule, rendant impossible la résolution du problème avec cette méthode.
+
+Ensuite, nous avons pensé qu'il pourrait être plus intéressant de travailler avec 1 classe = 1 particule, puisque cela règlerait le problème de calcul de fitness.
+Cela créerait néanmoins une nouvelle difficulté à surmonter, celle de devoir travailler avec des matrices, au lieu d'un simple chiffre réel, comme dans la méthode précédente.
+Aussi, un doute persiste sur le fait que la possibilité pour mettre à jour la vélocité ait un réel sens.
+
+Un papier (Particle swarm optimization algorithm applied to scheduling problems\cite{pongchairerks2009particle}) sur l'optimisation d'emplois du temps grâce à un algorithme PSO semble réussir à régler ce problème en encodant chaque solution, afin de pouvoir effectuer des opérations sur celles-ci, tout en s'assurant qu'elles gardent leur sens.
+Cela étant dit, les chercheurs ayant écrit cet article ne vont pas dans les détails du calcul de l'encodage et du décodage, et, plutôt que d'utiliser la version classique de l'algorithme, ils utilisent des variantes qui ne paraissent pas applicable à notre problème.
+

@@ -15,3 +15,6 @@
 *.gz
 *.fdb_latexmk
 *.fls
+*.lot
+*.lol
+!rapport.pdf
