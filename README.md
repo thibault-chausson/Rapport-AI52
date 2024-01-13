@@ -2,7 +2,7 @@
 
 Le rapport est disponible [ici](./rapport.pdf).
 
-## Objectif
+## Objectifs
 
 Nous avons souhaité résoudre un problème d'ordonnancement (la création d'emplois du temps) en utilisant différentes métaheuristiques. Nous avons réalisé à la main quelques itérations de chaque algorithme : 
 - Recuit simulé
