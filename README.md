@@ -6,7 +6,7 @@ Le rapport est disponible [ici](./rapport.pdf).
 
 Nous avons souhaité résoudre un problème d'ordonnancement (la création d'emplois du temps) en utilisant différentes métaheuristiques. Nous avons réalisé à la main quelques itérations de chaque algorithme : 
 - Recuit simulé
-- Recherche tabou
+- Recherche taboue
 - Algorithme génétique
 - Colonie de fourmis
 - Essaim particulaire
