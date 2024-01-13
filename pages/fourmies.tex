@@ -21,7 +21,36 @@ Pour limiter le nombre de n\oe uds, on considérera 11 n\oe uds, le premier repr
 
 Chaque paire de n\oe uds consécutifs sera séparée par 5 chemins, représentant les 5 jours de la semaine auxquels peut être affecté le prochain cours.
 
-Les fourmis parcourront donc tous les n\oe uds dans le même ordre, mais en empruntant des chemins différents entre chaque n\oe ud.
+Les fourmis parcourront donc tous les n\oe uds dans le même ordre, mais en empruntant des chemins différents entre chaque n\oe ud, comme représenté sur ce graphe : 
+
+\begin{center}
+    \begin{tikzpicture}[node distance={15mm}, main/.style = {circle}]
+        \node[main,draw] (0) {$0$};
+        \node[main,draw] (1) [right of=0] {$1$};
+        \node[main,draw] (2) [right of=1] {$2$};
+        \node[main,draw] (3) [right of=2] {$3$};
+        \node[main  ] (...) [right of=3] {$...$};
+        \node[main,draw] (8) [right of=...] {$8$};
+        \node[main,draw] (9) [right of=8] {$9$};
+        \node[main,draw] (10) [right of=9] {$10$};
+
+        \foreach \m in {0,1,2,3,4}{
+            \draw[->] (0) to [out=60-30*\m,in=120+30*\m,looseness=1.5] (1);
+        }
+        \foreach \m in {0,1,2,3,4}{
+            \draw[->] (1) to [out=60-30*\m,in=120+30*\m,looseness=1.5] (2);
+        }
+        \foreach \m in {0,1,2,3,4}{
+            \draw[->] (2) to [out=60-30*\m,in=120+30*\m,looseness=1.5] (3);
+        }
+        \foreach \m in {0,1,2,3,4}{
+            \draw[->] (8) to [out=60-30*\m,in=120+30*\m,looseness=1.5] (9);
+        }
+        \foreach \m in {0,1,2,3,4}{
+            \draw[->] (9) to [out=60-30*\m,in=120+30*\m,looseness=1.5] (10);
+        }
+    \end{tikzpicture} 
+\end{center}
 
 Au lieu de pondérer le choix du prochain n\oe ud par sa distance, les fourmis calculeront le nombre de conflits engendrés par le choix de chaque chemin.
 
@@ -57,7 +86,7 @@ La première fourmi se trouve au n\oe ud $0$.
 Les probabilités de choix pour le prochain chemin sont :
 
 
-\begin{table}[!h]
+\begin{table}[h!]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
@@ -66,7 +95,7 @@ Les probabilités de choix pour le prochain chemin sont :
         Probabilité & 0.2 & 0.2 & 0.2 & 0.2 & 0.2 \\
         \hline
     \end{tabular}
-    \caption{Probabilités de choix de la fourmi 1 pour le n\oe ud 1 à la génération 1}\label{tab:voeux-etudiant-1}
+    \caption{Probabilités de choix de la fourmi 1 pour le n\oe ud 1 à la génération 1}\label{tab:fourmi-1-noeud-1-gen-1}
 \end{table}
 
 Elle choisit le n\oe ud $3$.
@@ -81,7 +110,7 @@ Les probabilités de choix pour le n\oe ud 2 sont ainsi :
         Probabilité & 0.22 & 0.22 & 0.12 & 0.22 & 0.22 \\
         \hline
     \end{tabular}
-    \caption{Probabilités de choix de la fourmi 1 pour le n\oe ud 2 à la génération 1}\label{tab:voeux-etudiant-2}
+    \caption{Probabilités de choix de la fourmi 1 pour le n\oe ud 2 à la génération 1}\label{tab:fourmi-1-noeud-2-gen-1}
 \end{table}
 
 La fourmi choisit le n\oe ud $1$.
@@ -96,7 +125,7 @@ On continue jusqu'au n\oe ud $10$, et on obtient la répartition suivante :
         Cours & 2, 4, 9 &   & 1, 5, 6, 8 &   & 3, 7, 10 & 6       \\
         \hline
     \end{tabular}
-    \caption{Répartition de l'emploi du temps de la fourmi 1 à la génération 1}\label{tab:voeux-etudiant-3}
+    \caption{Répartition de l'emploi du temps de la fourmi 1 à la génération 1}\label{tab:fourmi-1-gen-1}
 \end{table}
 
 Après avoir répété l'opération pour les 10 fourmis, on obtient comme élite la fourmi 6 :
@@ -110,7 +139,7 @@ Après avoir répété l'opération pour les 10 fourmis, on obtient comme élite
         Cours & 2 & 1, 5, 7, 9, 10 & 3 &   & 4, 6, 8 & 8       \\
         \hline
     \end{tabular}
-    \caption{Répartition de l'emploi du temps de la fourmi 6 à la génération 1}\label{tab:voeux-etudiant-4}
+    \caption{Répartition de l'emploi du temps de la fourmi 6 à la génération 1}\label{tab:fourmi-6-gen-1}
 \end{table}
 
 La trace de phéromones est la suivante :
@@ -142,7 +171,7 @@ La trace de phéromones est la suivante :
         10                      & 1.0e+01 & 3.9e+01 & 1.0e-03 & 1.0e-03 & 2.1e+01 \\
         \hline
     \end{tabular}
-    \caption{Trace laissée par la génération 1}\label{tab:voeux-etudiant-5}
+    \caption{Trace laissée par la génération 1}\label{tab:trace-gen-1}
 \end{table}
 
 On passe maintenant à la deuxième génération de fourmis :
@@ -159,7 +188,7 @@ La première fourmi se trouve au n\oe ud $0$. Les probabilités de choix pour le
         Probabilité & 0.001 & 0.326 & 0.210 & 0.235 & 0.228 \\
         \hline
     \end{tabular}
-    \caption{Probabilités de choix de la fourmi 1 pour le n\oe ud 1 à la génération 2}\label{tab:voeux-etudiant-6}
+    \caption{Probabilités de choix de la fourmi 1 pour le n\oe ud 1 à la génération 2}\label{tab:fourmi-1-noeud-1-gen-2}
 \end{table}
 
 Elle choisit le n\oe ud $4$.
@@ -175,7 +204,7 @@ On continue ainsi jusqu'à la dernière génération, et on obtient cette élite
         Cours & 8, 9 & 5, 10 & 4, 6, 7 & 3 & 1, 2 & 10      \\
         \hline
     \end{tabular}
-    \caption{Répartition de l'emploi du temps de la meilleure fourmi à la génération 1}\label{tab:voeux-etudiant-7}
+    \caption{Répartition de l'emploi du temps de la meilleure fourmi à la génération 1}\label{tab:fourmi-finale}
 \end{table}
 
 On a réussi à atteindre une solution pour laquelle la fitness est maximale.
